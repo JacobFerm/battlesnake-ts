@@ -121,13 +121,14 @@ export const findTotalHidePoints = (
 ): number => {
   let points = findHidePoints(nextCoord, enemySnakes, youLength, board);
 
+  if (points) return points;
+
   const asdf = findValidDirections(nextCoord, nextBoard).map((direction) => {
     const nextCoord2 = coordInDirection(nextCoord, direction);
     return findHidePoints(nextCoord2, enemySnakes, youLength, nextBoard);
   });
 
-  points += Math.max(...asdf);
-  return points;
+  return Math.max(...asdf) / 2;
 };
 
 const findKillPoints = (
@@ -156,14 +157,15 @@ export const findTotalKillPoints = (
   nextBoard: Board
 ): number => {
   let points = findKillPoints(nextCoord, enemySnakes, youLength, board);
+
+  if (points) return points;
+
   const asdf = findValidDirections(nextCoord, nextBoard).map((direction) => {
     const nextCoord2 = coordInDirection(nextCoord, direction);
     return findHidePoints(nextCoord2, enemySnakes, youLength, nextBoard);
   });
 
-  points += Math.max(...asdf);
-
-  return points;
+  return Math.max(...asdf) / 2;
 };
 
 export const findEnemyReachablePoints = (
