@@ -65,7 +65,6 @@ export class BasicStrategy implements Strategy {
           return {
             direction,
             points: reachable + hidePoints,
-            reason: "reach or hide",
           };
         }
 
@@ -73,14 +72,12 @@ export class BasicStrategy implements Strategy {
           return {
             direction,
             points: reachable + killPoints + enemyReachablePoints,
-            reason: "kill",
           };
         }
 
         return {
           direction,
           points: reachable + foodPoints,
-          reason: "none",
         };
       }
     );
@@ -98,6 +95,11 @@ export class BasicStrategy implements Strategy {
     })[0];
 
     console.log(`MOVE ${gameState.turn}: ${nextMove.direction}`);
+
+    if (gameState.turn === 0) {
+      return { move: nextMove.direction.toLocaleLowerCase(), shout: "glhf" };
+    }
+
     return { move: nextMove.direction.toLocaleLowerCase() };
   }
 }
