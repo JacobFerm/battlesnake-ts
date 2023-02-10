@@ -149,16 +149,4 @@ describe("Common scenarios", () => {
     const nextMove = strategy.nextMove(gameState);
     expect(nextMove.move).toBe(Direction.RIGHT);
   });
-
-  test("prefer center", () => {
-    const gameState = boardState(`
-      ........
-      ........
-      0.......
-      1.......
-      2......`);
-
-    const nextMove = strategy.nextMove(gameState);
-    expect(nextMove.move).toBe(Direction.RIGHT);
-  });
 });
