@@ -96,10 +96,6 @@ export class BasicStrategy implements Strategy {
 
     console.log(`MOVE ${gameState.turn}: ${nextMove.direction}`);
 
-    if (gameState.turn === 0) {
-      return { move: nextMove.direction.toLocaleLowerCase(), shout: "glhf" };
-    }
-
     return { move: nextMove.direction.toLocaleLowerCase() };
   }
 }
