@@ -4,8 +4,8 @@ import {
   coordInDirection,
   distance,
   findEnemyReachablePoints,
-  findHidePoints,
-  findKillPoints,
+  findTotalHidePoints,
+  findTotalKillPoints,
   findValidDirections,
   sameCoord,
   simulateBoard,
@@ -37,18 +37,20 @@ export class BasicStrategy implements Strategy {
         const closeFood = closestFood(nextCoord, gameState.board);
         const foodDistance = closeFood ? distance(nextCoord, closeFood) : 0;
 
-        const hidePoints = findHidePoints(
+        const hidePoints = findTotalHidePoints(
           nextCoord,
           enemySnakes,
           gameState.you.length,
-          gameState.board
+          gameState.board,
+          nextBoard
         );
 
-        const killPoints = findKillPoints(
+        const killPoints = findTotalKillPoints(
           nextCoord,
           enemySnakes,
           gameState.you.length,
-          gameState.board
+          gameState.board,
+          nextBoard
         );
 
         const foodPoints =

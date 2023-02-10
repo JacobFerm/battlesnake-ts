@@ -94,7 +94,7 @@ const findMaxReachableCells = (head: Coord, board: Board): number => {
   return Math.max(...asdf);
 };
 
-export const findHidePoints = (
+const findHidePoints = (
   nextCoord: Coord,
   enemySnakes: Battlesnake[],
   youLength: number,
@@ -112,7 +112,25 @@ export const findHidePoints = (
   return points;
 };
 
-export const findKillPoints = (
+export const findTotalHidePoints = (
+  nextCoord: Coord,
+  enemySnakes: Battlesnake[],
+  youLength: number,
+  board: Board,
+  nextBoard: Board
+): number => {
+  let points = findHidePoints(nextCoord, enemySnakes, youLength, board);
+
+  const asdf = findValidDirections(nextCoord, nextBoard).map((direction) => {
+    const nextCoord2 = coordInDirection(nextCoord, direction);
+    return findHidePoints(nextCoord2, enemySnakes, youLength, nextBoard);
+  });
+
+  points += Math.max(...asdf);
+  return points;
+};
+
+const findKillPoints = (
   nextCoord: Coord,
   enemySnakes: Battlesnake[],
   youLength: number,
@@ -127,6 +145,24 @@ export const findKillPoints = (
       points += points + 40;
     }
   });
+  return points;
+};
+
+export const findTotalKillPoints = (
+  nextCoord: Coord,
+  enemySnakes: Battlesnake[],
+  youLength: number,
+  board: Board,
+  nextBoard: Board
+): number => {
+  let points = findKillPoints(nextCoord, enemySnakes, youLength, board);
+  const asdf = findValidDirections(nextCoord, nextBoard).map((direction) => {
+    const nextCoord2 = coordInDirection(nextCoord, direction);
+    return findHidePoints(nextCoord2, enemySnakes, youLength, nextBoard);
+  });
+
+  points += Math.max(...asdf);
+
   return points;
 };
 
