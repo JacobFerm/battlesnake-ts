@@ -7,4 +7,5 @@ export interface Strategy {
 export type DirectionResult = {
   direction: Direction;
   points: number;
+  reason?: string | null;
 };

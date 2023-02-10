@@ -1,5 +1,6 @@
 import { Direction } from "../types/strategy";
-import { Battlesnake, Board, Coord } from "../types/types";
+import { Battlesnake, Board, Coord, GameState } from "../types/types";
+import { reachableCells } from "./ReachableCells";
 
 export function coordInDirection(start: Coord, direction: Direction): Coord {
   switch (direction) {
@@ -67,3 +68,81 @@ export function closestFood(head: Coord, board: Board): Coord | null {
 export function distance(coord1: Coord, coord2: Coord): number {
   return Math.abs(coord1.x - coord2.x) + Math.abs(coord2.y - coord1.y);
 }
+
+export const copyBoard = (board: Board): Board => {
+  return JSON.parse(JSON.stringify(board)) as Board;
+};
+
+export const simulateBoard = (
+  nextCoord: Coord,
+  gameState: GameState
+): Board => {
+  const newBoard = copyBoard(gameState.board);
+  const youSnake = newBoard.snakes.find((snake) =>
+    sameCoord(snake.head, gameState.you.head)
+  );
+  youSnake?.body.unshift(nextCoord);
+  youSnake?.body.pop();
+  return newBoard;
+};
+
+const findMaxReachableCells = (head: Coord, board: Board): number => {
+  const asdf = findValidDirections(head, board).map((direction) => {
+    const nextCoord = coordInDirection(head, direction);
+    return reachableCells(board, nextCoord);
+  });
+  return Math.max(...asdf);
+};
+
+export const findHidePoints = (
+  nextCoord: Coord,
+  enemySnakes: Battlesnake[],
+  youLength: number,
+  board: Board
+): number => {
+  let points = 0;
+  enemySnakes.forEach((snake) => {
+    const enemyHeadClose = findValidDirections(snake.body[0], board).some(
+      (dir) => sameCoord(nextCoord, coordInDirection(snake.body[0], dir))
+    );
+    if (enemyHeadClose && snake.body.length >= youLength) {
+      points -= 100;
+    }
+  });
+  return points;
+};
+
+export const findKillPoints = (
+  nextCoord: Coord,
+  enemySnakes: Battlesnake[],
+  youLength: number,
+  board: Board
+): number => {
+  let points = 0;
+  enemySnakes.forEach((snake) => {
+    const enemyHeadClose = findValidDirections(snake.body[0], board).some(
+      (dir) => sameCoord(nextCoord, coordInDirection(snake.body[0], dir))
+    );
+    if (enemyHeadClose && snake.body.length < youLength) {
+      points += points + 40;
+    }
+  });
+  return points;
+};
+
+export const findEnemyReachablePoints = (
+  enemySnakes: Battlesnake[],
+  board: Board,
+  nextBoard: Board
+): number => {
+  let points = 0;
+  enemySnakes.forEach((snake) => {
+    const before = findMaxReachableCells(snake.head, board);
+    const after = findMaxReachableCells(snake.head, nextBoard);
+
+    if (after < before / 2) {
+      points = points + 100;
+    }
+  });
+  return points;
+};
