@@ -6,6 +6,5 @@ export interface Strategy {
 
 export type DirectionResult = {
   direction: Direction;
-  outcome: Outcome;
   points: number;
 };

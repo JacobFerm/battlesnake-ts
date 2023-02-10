@@ -4,28 +4,53 @@ import { Battlesnake, Board, Coord } from "../types/types";
 export function coordInDirection(start: Coord, direction: Direction): Coord {
   switch (direction) {
     case Direction.UP:
-      return { x: start.x, y: start.y + 1 }
+      return { x: start.x, y: start.y + 1 };
     case Direction.RIGHT:
-      return { x: start.x + 1, y: start.y }
+      return { x: start.x + 1, y: start.y };
     case Direction.DOWN:
-      return { x: start.x, y: start.y - 1 }
+      return { x: start.x, y: start.y - 1 };
     case Direction.LEFT:
-      return { x: start.x - 1, y: start.y }
+      return { x: start.x - 1, y: start.y };
   }
 }
 
 export function isSnakePart(coord: Coord, board: Board): boolean {
   return board.snakes.some((snake: Battlesnake) => {
-    return snake.body.some((bodyPart: Coord) => sameCoord(bodyPart, coord));
+    for (let i = 0; i < snake.body.length - 1; i++) {
+      if (sameCoord(snake.body[i], coord)) {
+        return true;
+      }
+    }
+    return false;
+    // return snake.body.some((bodyPart: Coord) => sameCoord(bodyPart, coord));
+  });
+}
+
+export function findValidDirections(head: Coord, board: Board): Direction[] {
+  return Object.values(Direction).filter((direction: Direction) => {
+    const nextCoord = coordInDirection(head, direction);
+    const isOutofBounds = isOutside(nextCoord, board);
+    const isSnake = isSnakePart(nextCoord, board);
+    return !(isOutofBounds || isSnake);
   });
 }
 
 export function isOutside(coord: Coord, board: Board): boolean {
-  return coord.y < 0 || coord.x < 0 || coord.x >= board.width || coord.y >= board.height;
+  return (
+    coord.y < 0 ||
+    coord.x < 0 ||
+    coord.x >= board.width ||
+    coord.y >= board.height
+  );
 }
 
 export function isEdge(coord: Coord, board: Board): boolean {
-  return coord.y === 0 || coord.x === 0 || coord.x === board.width || coord.y === board.height;
+  return (
+    coord.y === 0 ||
+    coord.x === 0 ||
+    coord.x === board.width ||
+    coord.y === board.height
+  );
 }
 
 export function sameCoord(coord1: Coord, coord2: Coord) {
