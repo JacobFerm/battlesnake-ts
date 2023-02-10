@@ -6,7 +6,7 @@ describe('Common scenarios', () => {
 
   const strategy = new BasicStrategy();
 
-  xit('avoid self', () => {
+  test('avoid self', () => {
     const gameState = boardState(`
       .....
       ..432
@@ -19,7 +19,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.DOWN);
   });
 
-  xit('avoid wall up', () => {
+  test('avoid wall up', () => {
     const gameState = boardState(`
       ....0
       ....1
@@ -32,7 +32,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.LEFT);
   });
 
-  xit('avoid wall down', () => {
+  test('avoid wall down', () => {
     const gameState = boardState(`
       .....
       .....
@@ -45,7 +45,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.LEFT);
   });
 
-  xit('avoid wall left', () => {
+  test('avoid wall left', () => {
     const gameState = boardState(`
       .....
       .....
@@ -58,7 +58,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.UP);
   });
 
-  xit('avoid wall right', () => {
+  test('avoid wall right', () => {
     const gameState = boardState(`
       .....
       .....
@@ -71,7 +71,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.UP);
   });
 
-  xit('avoid other snake', () => {
+  test('avoid other snake', () => {
     const gameState = boardState(`
       .....
       .BA..
@@ -84,7 +84,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.DOWN);
   });
 
-  xit('go for food', () => {
+  test('go for food', () => {
     const gameState = boardState(`
       .....
       ..0..
@@ -98,7 +98,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.RIGHT);
   });
 
-  xit('avoid trapping yourself', () => {
+  test('avoid trapping yourself', () => {
     const gameState = boardState(`
       .0.......
       .1.......
@@ -111,7 +111,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.RIGHT);
   });
 
-  xit('follow tail in narrow spaces', () => {
+  test('follow tail in narrow spaces', () => {
     const gameState = boardState(`
       5..0..
       4321..
@@ -124,7 +124,7 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.LEFT);
   });
 
-  xit('(optional) choose most available space', () => {
+  test('(optional) choose most available space', () => {
     const gameState = boardState(`
       ...0....
       ...1....
@@ -137,13 +137,27 @@ describe('Common scenarios', () => {
     expect(nextMove.move).toBe(Direction.RIGHT);
   });
 
-  xit('(optional) kill other snake', () => {
+  test('(optional) kill other snake', () => {
     const gameState = boardState(`
       ........
       ......0.
       ......1A
       ...5432B
       ......DC`
+    );
+
+    const nextMove = strategy.nextMove(gameState);
+    expect(nextMove.move).toBe(Direction.RIGHT);
+  });
+
+
+  test('prefer center', () => {
+    const gameState = boardState(`
+      ........
+      ........
+      0.......
+      1.......
+      2......`
     );
 
     const nextMove = strategy.nextMove(gameState);

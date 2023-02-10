@@ -24,6 +24,10 @@ export function isOutside(coord: Coord, board: Board): boolean {
   return coord.y < 0 || coord.x < 0 || coord.x >= board.width || coord.y >= board.height;
 }
 
+export function isEdge(coord: Coord, board: Board): boolean {
+  return coord.y === 0 || coord.x === 0 || coord.x === board.width || coord.y === board.height;
+}
+
 export function sameCoord(coord1: Coord, coord2: Coord) {
   return coord1.x == coord2.x && coord1.y == coord2.y;
 }
